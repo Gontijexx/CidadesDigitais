@@ -269,38 +269,41 @@ func createHandler() (*r *mux.Router){
 		r.HandleFunc().Methods(http.MethodDelete)
 
 		//**********Rotas em Pagamento (otb)
-		//----------Rotas de Pagamento
-		//lista pagamento
-		r.HandleFunc().Methods(http.MethodGet)
+			//----------Rotas de Pagamento
+				//ROTAS EM PAG_PATH
+					//lista pagamento
+						r.HandleFunc().Methods(http.MethodGet)
 
-		//salva pagamento
-		r.HandleFunc().Methods(http.MethodPost)
+					//salva pagamento
+						r.HandleFunc().Methods(http.MethodPost)
 
-		//edita pagamento
-		r.HandleFunc().Methods(http.MethodPut)
+					//edita pagamento
+						r.HandleFunc().Methods(http.MethodPut)
+				//ROTAS EM PAG_ID_PATH
+					//lista pagamento por ID
+						r.HandleFunc().Methods(http.MethodGet)
 
-		//lista pagamento por ID
-		r.HandleFunc().Methods(http.MethodGet)
+					//apaga pagamento ID
+						r.HandleFunc().Methods(http.MethodDelete)
 
-		//apaga pagamento ID
-		r.HandleFunc().Methods(http.MethodDelete)
+			//----------Rotas de Municipio Fatura
+				//ROTAS EM PAG_FAT_MUNICIPIO
+					//lista municipio fatura (cd_municipio_cod_ibge)
+						r.HandleFunc().Methods(http.MethodGet)
+				//ROTAS EM PAG_FAT_LIST
+					//lista pagamento fatura (cod_otb)
+						r.HandleFunc().Methods(http.MethodGet)
+				//ROTAS EM PAG_FAT_SAVE
+					//salva pagamento fatura
+						r.HandleFunc().Methods(http.MethodPost)
 
-		//----------Rotas de Municipio Fatura
-		//lista municipio fatura (cd_municipio_cod_ibge)
-		r.HandleFunc().Methods(http.MethodGet)
-
-		//lista pagamento fatura (cod_otb)
-		r.HandleFunc().Methods(http.MethodGet)
-
-		//salva pagamento fatura
-		r.HandleFunc().Methods(http.MethodPost)
-
-		//----------Rotas de Pagamento Itens
-		//lista pagamento itens	(cod_otb)
-		r.HandleFunc().Methods(http.MethodGet)
-
-		//edita pagamento itens
-		r.HandleFunc().Methods(http.MethodPut)
+			//----------Rotas de Pagamento Itens
+				//ROTAS EM PAG_LIST_ITENS
+					//lista pagamento itens	(cod_otb)
+						r.HandleFunc().Methods(http.MethodGet)
+				//ROTAS EM PAG_EDIT_ITENS 
+					//edita pagamento itens
+						r.HandleFunc().Methods(http.MethodPut)
 
 		//**********Rotas em Prefeitos
 		//----------Rotas de Prefeitos
