@@ -11,7 +11,7 @@ import (
 func ListaUsuarios(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 
-	results, err := database.ListaUsuario()
+	results, err, db := database.ListaGeral("usuario", "cod_usuario")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -27,8 +27,10 @@ func ListaUsuarios(w http.ResponseWriter, r *http.Request) {
 		}
 
 		log.Printf("[INFO] Listing users: %v %v", err, user)
-	}
-	bytes, err := util.StructToBytes(user)
+		bytes, err := util.StructToBytes(user)
 
-	w.Write(bytes)
+		w.Write(bytes)
+	}
+
+	defer db.Close()
 }
