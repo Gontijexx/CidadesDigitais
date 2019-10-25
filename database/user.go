@@ -5,10 +5,10 @@ import (
 	"log"
 )
 
-func CheckLogin(login string) (results *sql.Rows, err error, db *sql.DB) {
-	db = ClientSQL()
+func CheckLogin(login string) (results *sql.Rows, err error) {
+	db := ClientSQL()
 
-	results, err = db.Query("SELECT * FROM usuario WHERE login =?", login)
+	results, err = db.Query("SELECT usuario.login FROM usuario WHERE login =?", login)
 	if err != nil {
 		log.Printf("[WARN] Could not 'SELECT * FROM usuario in database, because: %v\n", err)
 		return
@@ -16,19 +16,19 @@ func CheckLogin(login string) (results *sql.Rows, err error, db *sql.DB) {
 
 	defer db.Close()
 
-	return results, err, db
+	return results, err
 }
 
-func CheckSenha(senha string) (results *sql.Rows, err error, db *sql.DB) {
-	db = ClientSQL()
+func CheckSenha(senha string) (results *sql.Rows, err error) {
+	db := ClientSQL()
 
-	results, err = db.Query("SELECT * FROM senha WHERE login =?", senha)
+	results, err = db.Query("SELECT usuario.senha FROM usuario WHERE login =?", senha)
 	if err != nil {
-		log.Printf("[WARN] Could not 'SELECT * FROM senha in database, because: %v\n", err)
+		log.Printf("[WARN] Could not 'SELECT usuario.senha FROM usuario in database, because: %v\n", err)
 		return
 	}
 
 	defer db.Close()
 
-	return results, err, db
+	return results, err
 }
