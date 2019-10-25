@@ -13,6 +13,8 @@ func CreateHandler() (r *mux.Router) {
 	//cria um roteador
 	r = mux.NewRouter()
 	r.HandleFunc(config.USER_PATH, control.ListaUsuarios).Methods(http.MethodGet)
+	r.HandleFunc(config.USER_PATH, control.Login).Methods(http.MethodPost)
+	r.HandleFunc(config.USER_PATH, control.Senha).Methods(http.MethodPost)
 	/*
 		//**********Rotas em Assunto
 		//----------Rotas de Assunto
