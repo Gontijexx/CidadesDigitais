@@ -1,24 +1,21 @@
 package database
 
 import (
+	"CidadesDigitais/models"
 	"database/sql"
 	"log"
 )
 
-func CheckLogin(login string) (results *sql.Rows, err error) {
+func CheckLogin(login string) (err error, l *models.Login) {
 	db := ClientSQL()
 
-	results, err = db.Query("SELECT usuario.login FROM usuario WHERE login =?", login)
-	if err != nil {
-		log.Printf("[WARN] Could not 'SELECT * FROM usuario in database, because: %v\n", err)
-		return
-	}
+	log.Print(login)
+	var cred models.Login
+	err = db.QueryRow("SELECT usuario.login FROM usuario WHERE login =?", login).Scan(&cred.Login)
 
 	defer db.Close()
 
-	return results, err
-}
-
+	return err
 func CheckSenha(senha string) (results *sql.Rows, err error) {
 	db := ClientSQL()
 
