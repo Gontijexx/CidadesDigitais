@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" //database driver
 )
 
 //ClientSQL definindo db como nosso banco de dados
@@ -14,8 +14,8 @@ func ClientSQL() (db *sql.DB) {
 	/*
 		definindo db como nosso banco de dados sql.Open
 		tem como parametros nome do drive "mysql", no caso
-		e o segundo parametro eh o endereco de acesso username,
-		password e endereco de IP do localhost e o nome do db
+		e o segundo parametro eh dataSourceName:
+		"username:password@endereco_de_IP_local[tcp(127.0.0.1:3306)]/nome_db"
 	*/
 	db, err := sql.Open("mysql", "root@tcp(127.0.0.1:3306)/cidades_digitais_db")
 	if err != nil {

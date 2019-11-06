@@ -6,16 +6,28 @@ import (
 	"log"
 )
 
-func CheckLogin(login string) (err error, l *models.Login) {
+// Verifica se o usuario fornecido existe no bando de dados
+func CheckLogin(login string) (results *models.Login, err error) {
 	db := ClientSQL()
-
-	log.Print(login)
 	var cred models.Login
+
+	/*
+		QueryRow consulta o bando de dados com o argumento login, se não houver nenhum dado correspondente
+		ao argumento passado, QueryRow retorna ErrNoRows. Caso contrário, o retorno eh <nil>. *Row's Scan
+		verifica a primeira linha correspondente e descarta o restante.
+	*/
 	err = db.QueryRow("SELECT usuario.login FROM usuario WHERE login =?", login).Scan(&cred.Login)
+
+	// Tratamento de erro, caso err retorne algo diferente de <nil>
+	if err != nil {
+		log.Printf("[WARN] Could not 'SELECT usuario.login FROM usuario in database, because: %v\n", err)
+	}
 
 	defer db.Close()
 
-	return err
+	return results, err
+}
+
 func CheckSenha(senha string) (results *sql.Rows, err error) {
 	db := ClientSQL()
 

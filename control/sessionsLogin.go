@@ -5,15 +5,11 @@ import (
 	"CidadesDigitais/models"
 	"CidadesDigitais/util"
 	"CidadesDigitais/validation"
-	"database/sql"
 	"log"
-	"math/rand"
 	"net/http"
-
-	"github.com/gorilla/securecookie"
-	"github.com/gorilla/sessions"
 )
 
+/*
 var (
 	LetterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	key         = securecookie.GenerateRandomKey(32)
@@ -27,56 +23,51 @@ func randStringRunes(n int) string {
 	}
 	return string(b)
 }
+*/
 
 func Login(w http.ResponseWriter, r *http.Request) {
+	// tratamento dos dados vindos do front-end
 	var login models.Login
-
 	body := r.Body
-
 	bytes, err := util.BodyToBytes(body)
-
 	err = util.BytesToStruct(bytes, &login)
 
-	log.Print(login)
-
 	// checks if struct is a valid one
-	if err := validation.Validator.Struct(login); err != nil {
+	if err = validation.Validator.Struct(login); err != nil {
 
 		log.Printf("[WARN] invalid user information, because, %v\n", err)
-		w.WriteHeader(http.StatusPreconditionFailed)
+		w.WriteHeader(http.StatusPreconditionFailed) // Status 412
 		return
 	}
 
-	err, cred := database.CheckLogin(login.Login)
+	_, err = database.CheckLogin(login.Login)
 
-	log.Print(cred)
-
-	if err == sql.ErrNoRows {
-		w.WriteHeader(http.StatusForbidden)
+	if err != nil {
+		w.WriteHeader(http.StatusForbidden) // Status 403
 	} else {
-		w.WriteHeader(http.StatusAccepted)
+		w.WriteHeader(http.StatusAccepted) // Status 202
 	}
-
 }
 
 func Senha(w http.ResponseWriter, r *http.Request) {
-	var password models.Senha
-	var user *models.Login
+	//var password models.Senha
+	var user models.Login
 
 	log.Print(user)
+	/*
+		body := r.Body
 
-	body := r.Body
+		bytes, err := util.BodyToBytes(body)
 
-	bytes, err := util.BodyToBytes(body)
+		err = util.BytesToStruct(bytes, &password)
 
-	err = util.BytesToStruct(bytes, &password)
+		if err := validation.Validator.Struct(password); err != nil {
 
-	if err := validation.Validator.Struct(password); err != nil {
-
-		log.Printf("[WARN] invalid user information, because, %v\n", err)
-		w.WriteHeader(http.StatusPreconditionFailed)
-		return
-	}
+			log.Printf("[WARN] invalid user information, because, %v\n", err)
+			w.WriteHeader(http.StatusPreconditionFailed)
+			return
+		}
+	*/
 	/*
 		results, err := database.CheckSenha(password.Senha)
 
@@ -96,12 +87,12 @@ func Senha(w http.ResponseWriter, r *http.Request) {
 	//compara a senha que veio do banco, tranformando ela em []byte(password.Senha)
 	//com a senha que vem do front-end
 	//err = bcrypt.CompareHashAndPassword([]byte(user.Senha.String), []byte(password.Senha))
-
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-	} else {
-		w.WriteHeader(http.StatusAccepted)
-		//		util.Session(w, r)
-	}
-
+	/*
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+		} else {
+			w.WriteHeader(http.StatusAccepted)
+			//		util.Session(w, r)
+		}
+	*/
 }
