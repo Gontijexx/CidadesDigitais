@@ -2,14 +2,14 @@ package database
 
 import (
 	"CidadesDigitais/models"
-	"database/sql"
 	"log"
 )
 
 // Verifica se o usuario fornecido existe no bando de dados
-func CheckLogin(login string) (results *models.Login, err error) {
+
+func CheckLogin(login string) (results *models.Credentials, err error) {
 	db := ClientSQL()
-	var cred models.Login
+	var cred models.Credentials
 
 	/*
 		QueryRow consulta o bando de dados com o argumento login, se não houver nenhum dado correspondente
@@ -28,13 +28,17 @@ func CheckLogin(login string) (results *models.Login, err error) {
 	return results, err
 }
 
-func CheckSenha(senha string) (results *sql.Rows, err error) {
+func CheckSenha(login, senha string) (results *models.Credentials, err error) {
 	db := ClientSQL()
+	var cred models.Credentials
 
-	results, err = db.Query("SELECT usuario.senha FROM usuario WHERE login =?", senha)
+	log.Print(senha)
+
+	err = db.QueryRow("SELECT usuario.senha FROM usuario WHERE login = ? and senha = ?", login, senha).Scan(&cred.Senha)
+
+	// Tratamento de erro, caso err retorne algo diferente de <nil>
 	if err != nil {
 		log.Printf("[WARN] Could not 'SELECT usuario.senha FROM usuario in database, because: %v\n", err)
-		return
 	}
 
 	defer db.Close()
