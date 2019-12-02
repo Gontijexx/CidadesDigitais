@@ -2,27 +2,43 @@ package database
 
 import (
 	"CidadesDigitais/models"
-	"database/sql"
 	"log"
 )
 
-func CheckLogin(login string) (err error, l *models.Login) {
-	db := ClientSQL()
+// Verifica se o usuario fornecido existe no bando de dados
 
-	log.Print(login)
-	var cred models.Login
+func CheckLogin(login string) (results *models.Credentials, err error) {
+	db := ClientSQL()
+	var cred models.Credentials
+
+	/*
+		QueryRow consulta o bando de dados com o argumento login, se não houver nenhum dado correspondente
+		ao argumento passado, QueryRow retorna ErrNoRows. Caso contrário, o retorno eh <nil>. *Row's Scan
+		verifica a primeira linha correspondente e descarta o restante.
+	*/
 	err = db.QueryRow("SELECT usuario.login FROM usuario WHERE login =?", login).Scan(&cred.Login)
+
+	// Tratamento de erro, caso err retorne algo diferente de <nil>
+	if err != nil {
+		log.Printf("[WARN] Could not 'SELECT usuario.login FROM usuario in database, because: %v\n", err)
+	}
 
 	defer db.Close()
 
-	return err
-func CheckSenha(senha string) (results *sql.Rows, err error) {
-	db := ClientSQL()
+	return results, err
+}
 
-	results, err = db.Query("SELECT usuario.senha FROM usuario WHERE login =?", senha)
+func CheckSenha(login, senha string) (results *models.Credentials, err error) {
+	db := ClientSQL()
+	var cred models.Credentials
+
+	log.Print(senha)
+
+	err = db.QueryRow("SELECT usuario.senha FROM usuario WHERE login = ? and senha = ?", login, senha).Scan(&cred.Senha)
+
+	// Tratamento de erro, caso err retorne algo diferente de <nil>
 	if err != nil {
 		log.Printf("[WARN] Could not 'SELECT usuario.senha FROM usuario in database, because: %v\n", err)
-		return
 	}
 
 	defer db.Close()

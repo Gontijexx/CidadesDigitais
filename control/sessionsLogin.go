@@ -5,103 +5,38 @@ import (
 	"CidadesDigitais/models"
 	"CidadesDigitais/util"
 	"CidadesDigitais/validation"
-	"database/sql"
 	"log"
-	"math/rand"
 	"net/http"
-
-	"github.com/gorilla/securecookie"
-	"github.com/gorilla/sessions"
 )
 
-var (
-	LetterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	key         = securecookie.GenerateRandomKey(32)
-	store       = sessions.NewCookieStore(key)
-)
-
-func randStringRunes(n int) string {
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = LetterRunes[rand.Intn(len(LetterRunes))]
-	}
-	return string(b)
-}
+// Verificar se os dados para login estao corretos
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	var login models.Login
-
+	/*
+		Tratamento dos dados vindos do front-end
+		Nesse caso, o request pega login e senha
+	*/
+	var login models.Credentials
 	body := r.Body
-
 	bytes, err := util.BodyToBytes(body)
-
 	err = util.BytesToStruct(bytes, &login)
 
-	log.Print(login)
-
-	// checks if struct is a valid one
-	if err := validation.Validator.Struct(login); err != nil {
+	// Checks if struct is a valid one
+	if err = validation.Validator.Struct(login); err != nil {
 
 		log.Printf("[WARN] invalid user information, because, %v\n", err)
-		w.WriteHeader(http.StatusPreconditionFailed)
+		w.WriteHeader(http.StatusPreconditionFailed) // Status 412
 		return
 	}
 
-	err, cred := database.CheckLogin(login.Login)
+	_, err1 := database.CheckLogin(login.Login)
+	_, err2 := database.CheckSenha(login.Login, login.Senha)
 
-	log.Print(cred)
-
-	if err == sql.ErrNoRows {
-		w.WriteHeader(http.StatusForbidden)
+	if (err1 != nil) || (err2 != nil) {
+		w.WriteHeader(http.StatusForbidden) // Status 403
 	} else {
-		w.WriteHeader(http.StatusAccepted)
+		w.WriteHeader(http.StatusAccepted) // Status 202
 	}
 
-}
-
-func Senha(w http.ResponseWriter, r *http.Request) {
-	var password models.Senha
-	var user *models.Login
-
-	log.Print(user)
-
-	body := r.Body
-
-	bytes, err := util.BodyToBytes(body)
-
-	err = util.BytesToStruct(bytes, &password)
-
-	if err := validation.Validator.Struct(password); err != nil {
-
-		log.Printf("[WARN] invalid user information, because, %v\n", err)
-		w.WriteHeader(http.StatusPreconditionFailed)
-		return
-	}
-	/*
-		results, err := database.CheckSenha(password.Senha)
-
-		fmt.Print(results)
-	*/
-	/*
-		err = results.Scan(&user.IDUser, &user.Nome, &user.Email, &user.Login, &user.Status, &user.Senha)
-		if err != nil {
-			log.Printf("[WARN] Could not SCAN in database, because: %v\n", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-	*/
-	//	pass, err := util.StructToBytes(password)
-	//	w.Write(pass)
-
-	//compara a senha que veio do banco, tranformando ela em []byte(password.Senha)
-	//com a senha que vem do front-end
-	//err = bcrypt.CompareHashAndPassword([]byte(user.Senha.String), []byte(password.Senha))
-
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-	} else {
-		w.WriteHeader(http.StatusAccepted)
-		//		util.Session(w, r)
-	}
-
+	return
 }

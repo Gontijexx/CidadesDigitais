@@ -16,10 +16,7 @@ type ModuloUser struct {
 	CodMod int `json: "codmod"`
 }
 
-type Login struct {
+type Credentials struct {
 	Login string `json: "login"	validate: "alphanum, required"`
-}
-
-type Senha struct {
 	Senha string `json: "senha"	validate: "min=8, required"`
 }
