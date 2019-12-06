@@ -2,7 +2,6 @@ package database
 
 import (
 	"CidadesDigitais/models"
-	"CidadesDigitais/util"
 	"log"
 )
 
@@ -20,7 +19,11 @@ func CheckLogin(login string) (err error) {
 
 	err = db.QueryRow("SELECT usuario.login FROM usuario WHERE login =?", login).Scan(&cred.Login)
 
-	// Tratamento de erro, caso err retorne algo diferente de <nil>
+	/*
+		Tratamento de erro, caso err retorne algo diferente de <nil>
+		Excluir ou tratar este err de outra forma, CheckLogin esta sendo usada em duas situacoes
+		em que para cada uma temos um retorno diferente para os err
+	*/
 	if err != nil {
 		log.Printf("[WARN] Could not 'SELECT usuario.login FROM usuario in database, because: %v\n", err)
 	}
@@ -50,17 +53,25 @@ func CheckSenha(login, senha string) (err error) {
 	return err
 }
 
+// Insere um novo usuario no banco de dados
+// Por enquanto a criptografia de senha nao esta funcionando, o banco de dados nao esta aceitando o tamanha da string criptograda
+
 func InsertNewUser(nome, email, login, senha string) (err error) {
 	db := ClientSQL()
 
-	byteSenha := util.PasswordStringToByte(senha)
-	dbSenha := util.PasswordByteToHashString(byteSenha)
+	/*
+		Essas funcoes serao usadas para a criptografia, por enquanto o banco nao esta aceitando o tamanho da string
 
-	len := len(dbSenha)
+		byteSenha := util.PasswordStringToByte(senha)
+		dbSenha := util.PasswordByteToHashString(byteSenha)
 
-	log.Println(len)
+		len := len(dbSenha)
 
-	_, err = db.Query("INSERT INTO usuario(nome, email, login, senha) VALUES(?,?,?,?)", nome, email, login, dbSenha)
+		log.Println(len)
+	*/
+
+	// Exec eh recomendado para ser usado em INSERT e UPDATE
+	_, err = db.Exec("INSERT INTO usuario(nome, email, login, senha) VALUES(?,?,?,?)", nome, email, login, senha)
 
 	if err != nil {
 		//we need to change the menssage log
@@ -70,4 +81,13 @@ func InsertNewUser(nome, email, login, senha string) (err error) {
 	defer db.Close()
 
 	return err
+}
+
+func DeleteUser(IDUser int) {
+
+	db := ClientSQL()
+
+	db.Exec("DELETE FROM usuario WHERE cod_usuario=?", IDUser)
+
+	defer db.Close()
 }
