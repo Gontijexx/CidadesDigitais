@@ -34,5 +34,3 @@ func ListaUsuarios(w http.ResponseWriter, r *http.Request) {
 
 	defer db.Close()
 }
-
-//test
