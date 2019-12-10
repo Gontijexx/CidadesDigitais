@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"log"
 
-	_ "github.com/go-sql-driver/mysql" //database driver
+	_ "github.com/go-sql-driver/mysql" //	database driver
 )
 
-//ClientSQL definindo db como nosso banco de dados
+//	ClientSQL definindo db como nosso banco de dados
 func ClientSQL() (db *sql.DB) {
 	log.Println("[START] Go connecting...")
 

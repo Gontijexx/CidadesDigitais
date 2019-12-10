@@ -36,9 +36,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	err2 := database.CheckSenha(login.Login, login.Senha)
 
 	// Condicao que verifica se os dois dados constam no banco de dados
-	if (err1 != nil) || (err2 != nil) {
+	if (err1 != nil) || (err2 != true) {
+		log.Println("[FAIL]")
 		w.WriteHeader(http.StatusForbidden) // Status 403
 	} else {
+		log.Println("[SUCCESS]")
 		w.WriteHeader(http.StatusAccepted) // Status 202
 	}
 

@@ -6,12 +6,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// transforma a senha string em bytes
+//	Transforma a senha string em bytes
 func PasswordStringToByte(password string) []byte {
 	return []byte(password)
 }
 
-// criptografa a senha em byte e rotorna uma string criptografada
+//	Criptografa a senha em byte e rotorna uma string criptografada
 func PasswordByteToHashString(password []byte) string {
 	hash, err := bcrypt.GenerateFromPassword(password, 8)
 	if err != nil {
@@ -22,8 +22,8 @@ func PasswordByteToHashString(password []byte) string {
 	return string(hash)
 }
 
-// compara a senha fornecida pelo usuario (byte) com a senha associada
-// ao login armazenada no banco de dados que esta criptografada (string)
+//	Compara a senha fornecida pelo usuario (byte) com a senha associada
+//	ao login armazenada no banco de dados que esta criptografada (string)
 func ComparePasswords(dbPassword string, userPassword []byte) bool {
 
 	byteDbPassword := []byte(dbPassword)

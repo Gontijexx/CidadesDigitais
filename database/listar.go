@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-//ListaGeral lista qualquer elemento do BD
+//	ListaGeral lista qualquer elemento do BD
 func ListaGeral(param string, nID string) (results *sql.Rows, err error, db *sql.DB) {
 	db = ClientSQL()
 
