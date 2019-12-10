@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-// Criar novo usuario
+//	Criar novo usuario
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	var newUser models.User
@@ -17,7 +17,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	bytes, err := util.BodyToBytes(body)
 	err = util.BytesToStruct(bytes, &newUser)
 
-	// Verifica se os dados que chegaram correspodem as pre-condicoes
+	//	Verifica se os dados que chegaram correspodem as pre-condicoes
 
 	if err = validation.Validator.Struct(newUser); err != nil {
 
@@ -26,11 +26,11 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Verifica se o metodo recebido eh o esperado
+	//	Verifica se o metodo recebido eh o esperado
 
 	if r.Method == "POST" {
 
-		// Consulta no bando de dados se o login ja existe
+		//	Consulta no bando de dados se o login ja existe
 		err = database.CheckLogin(newUser.Login)
 
 		/*
@@ -42,7 +42,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusPreconditionFailed) // Status 412
 			return
 		} else {
-			database.InsertNewUser(newUser.Nome, newUser.Email, newUser.Login, newUser.Senha)
+			database.CreateNewUser(newUser.Nome, newUser.Email, newUser.Login, newUser.Senha)
 		}
 	}
 

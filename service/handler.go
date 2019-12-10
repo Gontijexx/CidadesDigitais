@@ -16,6 +16,7 @@ func CreateHandler() (r *mux.Router) {
 	r.HandleFunc(config.USER_PATH, control.ListaUsuarios).Methods(http.MethodGet)
 	r.HandleFunc(config.USER_PATH_LOGIN, control.Login).Methods(http.MethodPost)
 	r.HandleFunc(config.USER_PATH_CREATEUSER, control.CreateUser).Methods(http.MethodPost)
+	r.HandleFunc(config.USER_PATH_DELETEUSER, control.DeleteUser).Methods(http.MethodDelete)
 
 	/*
 		//**********Rotas em Usuario
