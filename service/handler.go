@@ -12,9 +12,27 @@ func CreateHandler() (r *mux.Router) {
 
 	//cria um roteador
 	r = mux.NewRouter()
+
 	r.HandleFunc(config.USER_PATH, control.ListaUsuarios).Methods(http.MethodGet)
 	r.HandleFunc(config.USER_PATH_LOGIN, control.Login).Methods(http.MethodPost)
-	r.HandleFunc(config.USER_PATH_CREATEUSER, control.NewUser).Methods(http.MethodPost)
+	r.HandleFunc(config.USER_PATH_CREATEUSER, control.CreateUser).Methods(http.MethodPost)
+
+	/*
+		//**********Rotas em Usuario
+					//Rotas em USER_PATH
+						//LISTA USUARIO
+						r.HandleFunc().Methods(http.MethodGet)
+						//SALVA USUARIO
+							r.HandleFunc().Methods(http.MethodPut)
+						//EDITA O USUARIO
+							r.HandleFunc().Methods(http.MethodPost)
+					//Rotas em USER_ID_PATH
+						//LISTA USUÁRIO POR ID
+							r.HandleFunc().Methods(http.MethodGet)
+						//APAGA O USUARIO
+							r.HandleFunc().Methods(http.MethodDelete)
+	*/
+
 	/*
 		//**********Rotas em Assunto
 		//----------Rotas de Assunto
@@ -357,19 +375,7 @@ func CreateHandler() (r *mux.Router) {
 
 		//**********Rotas em Tipologia
 
-		//**********Rotas em Usuario
-			//Rotas em USER_PATH
-				//LISTA USUARIO
-					r.HandleFunc().Methods(http.MethodGet)
-				//SALVA USUARIO
-					r.HandleFunc().Methods(http.MethodPut)
-				//EDITA O USUARIO
-					r.HandleFunc().Methods(http.MethodPost)
-			//Rotas em USER_ID_PATH
-				//LISTA USUÁRIO POR ID
-					r.HandleFunc().Methods(http.MethodGet)
-				//APAGA O USUARIO
-					r.HandleFunc().Methods(http.MethodDelete)
+
 
 	*/
 	return

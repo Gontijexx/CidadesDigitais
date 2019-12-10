@@ -29,9 +29,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// err1 consulta o login no banco de dados
 	err1 := database.CheckLogin(login.Login)
+
+	// err2 consulta a senha referente ao login fornecido
 	err2 := database.CheckSenha(login.Login, login.Senha)
 
+	// Condicao que verifica se os dois dados constam no banco de dados
 	if (err1 != nil) || (err2 != nil) {
 		w.WriteHeader(http.StatusForbidden) // Status 403
 	} else {
